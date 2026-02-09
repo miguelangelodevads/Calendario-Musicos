@@ -1,4 +1,5 @@
 :root {
+  /* Tema Samsung Dark */
   --bg: #000000;
   --text-main: #ffffff;
   --text-muted: #9e9e9e;
@@ -152,16 +153,19 @@ body {
   cursor: pointer;
 }
 
+/* --- AQUI ESTÁ A CORREÇÃO DO TRAVAMENTO --- */
 .calendar {
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  /* minmax(0, 1fr) força a largura a ser IGUAL, não importa o texto dentro */
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   grid-auto-rows: 1fr;
   gap: 1px;
   background: var(--grid-lines);
   border-top: 1px solid var(--grid-lines);
   padding-bottom: 90px;
 }
+
 .day-header {
   text-align: center;
   font-weight: 600;
@@ -183,7 +187,10 @@ body {
   display: flex;
   flex-direction: column;
   gap: 3px;
+  /* Isso impede que o dia cresça se tiver muita coisa */
+  overflow: hidden;
 }
+
 .day-number {
   position: absolute;
   top: 6px;
@@ -347,7 +354,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
-/* SELEÇÃO DE CORES (MELHORADA) */
+/* SELEÇÃO DE CORES */
 .color-presets {
   display: flex;
   gap: 15px;
@@ -364,7 +371,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-/* Estado Selecionado: Borda Branca Grossa + Glow */
 .color-option.selected {
   border: 4px solid #ffffff;
   transform: scale(1.15);
