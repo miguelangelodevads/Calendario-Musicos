@@ -2,10 +2,8 @@
   /* CORES: PRETO ABSOLUTO */
   --bg: #000000;
   --text-main: #ffffff;
-  --text-muted: #666666; /* Texto dos dias da semana mais discreto */
-
-  /* Cor da linha muito sutil (quase invisível) */
-  --grid-lines: #111111;
+  --text-muted: #666666;
+  --grid-lines: #222222; /* Linha sutil mas visível */
 
   --sunday-color: #e74c3c;
   --today-bg: #ffffff;
@@ -36,7 +34,6 @@ body {
   overscroll-behavior-y: none;
 }
 
-/* Utilitário */
 .hidden {
   display: none !important;
 }
@@ -52,37 +49,30 @@ body {
   overflow: hidden;
 }
 
-/* HEADER DO APP (Mais Alto) */
+/* HEADER */
 .header {
-  /* Aumentei o topo para 30px e embaixo para 15px */
-  padding: 25px 25px 25px;
+  padding: 30px 15px 10px;
   text-align: center;
-  background: var(--bg);
   flex-shrink: 0;
   z-index: 10;
 }
-
 .header h1 {
-  font-size: 1.2em; /* Aumentei levemente a fonte também */
+  font-size: 1.2em;
   font-weight: 700;
   letter-spacing: 0.5px;
   text-transform: uppercase;
   margin: 0;
 }
-.header p {
-  display: none;
-} /* Oculta subtítulo */
 
-/* Ícones Topo */
 .icon-btn {
   position: absolute;
-  top: 10px;
+  top: 30px;
   width: 35px;
   height: 35px;
   background: transparent;
   color: var(--primary);
   border: none;
-  font-size: 1.2em;
+  font-size: 1.3em;
   cursor: pointer;
   z-index: 20;
 }
@@ -93,25 +83,25 @@ body {
   right: 10px;
 }
 
-/* Botão Instalar App */
+/* INSTALAR APP */
 .install-container {
   position: absolute;
-  top: 50px;
+  top: 70px;
   left: 0;
   right: 0;
   display: flex;
   justify-content: center;
   z-index: 50;
-  animation: slideDown 0.5s ease-out;
+  animation: slideDown 0.5s;
 }
 .install-btn {
   background: var(--primary);
   color: white;
   border: none;
-  padding: 6px 16px;
+  padding: 8px 20px;
   border-radius: 30px;
   font-weight: 700;
-  font-size: 0.8em;
+  font-size: 0.9em;
   cursor: pointer;
   box-shadow: 0 4px 15px rgba(0, 122, 255, 0.4);
   display: flex;
@@ -129,27 +119,24 @@ body {
   }
 }
 
-/* ÁREA DO CALENDÁRIO */
+/* ÁREA CENTRAL */
 .main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  padding: 0;
 }
 
-/* Cabeçalho do Mês */
 .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2px 15px;
-  background: var(--bg);
+  padding: 5px 15px;
   min-height: 40px;
-  border-bottom: 1px solid var(--grid-lines); /* Linha fina separando o mês da grade */
+  border-bottom: 1px solid var(--grid-lines);
 }
 .calendar-header h2 {
-  font-size: 1.1em;
+  font-size: 1.2em;
   font-weight: 800;
   margin: 0;
 }
@@ -157,73 +144,67 @@ body {
   background: #222;
   color: #fff;
   border: none;
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   font-weight: bold;
   cursor: pointer;
 }
 
-/* O CALENDÁRIO */
+/* --- GRADE ALINHADA --- */
+.week-header {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  text-align: center;
+  background: var(--bg);
+  height: 25px;
+  align-items: center;
+  border-bottom: 1px solid var(--grid-lines);
+  flex-shrink: 0;
+}
+.week-header div {
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 0.65em;
+}
+.week-header .sunday {
+  color: var(--sunday-color);
+}
+
 .calendar {
   flex: 1;
   display: grid;
-  /* Colunas fixas e iguais */
   grid-template-columns: repeat(7, minmax(0, 1fr));
   grid-auto-rows: 1fr;
-
-  /* IMPORTANTE: Gap 0 e Fundo Preto removem as linhas cinzas antigas */
   gap: 0;
   background: var(--bg);
   padding-bottom: 0;
 }
 
-/* DIAS DA SEMANA (CABEÇALHO) - AGORA FLUTUANDO NO PRETO */
-.day-header {
-  text-align: center;
-  font-weight: 700;
-  color: var(--text-muted);
-  font-size: 0.65em;
-  height: 24px;
-  line-height: 24px;
-
-  /* Fundo preto puro, sem bordas */
-  background: var(--bg);
-  border: none;
-}
-.day-header:first-child {
-  color: var(--sunday-color);
-}
-
-/* CÉLULAS DOS DIAS */
 .day {
   background: var(--bg);
-  padding: 22px 0 0 0;
+  padding: 4px 0 0 0; /* Padding mínimo para colar o número */
   cursor: pointer;
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 1px;
   overflow: hidden;
-
-  /* Desenhamos a grade aqui, apenas nos dias */
-  border-top: 1px solid var(--grid-lines);
   border-right: 1px solid var(--grid-lines);
+  border-bottom: 1px solid var(--grid-lines);
 }
-
-/* Remove a borda direita do último dia da semana para não duplicar com a tela */
 .calendar .day:nth-child(7n) {
   border-right: none;
 }
 
 .day-number {
-  position: absolute;
-  top: 4px;
   width: 100%;
   text-align: center;
-  font-size: 0.8em;
+  display: block;
+  font-size: 0.85em;
   font-weight: 500;
   color: var(--text-main);
+  margin-bottom: 2px;
 }
 .calendar .day:nth-child(7n + 1) .day-number {
   color: var(--sunday-color);
@@ -231,20 +212,17 @@ body {
 .day.other-month .day-number {
   opacity: 0.3;
 }
-
-/* Dia de Hoje */
 .day.today .day-number {
   background: var(--today-bg);
   color: var(--today-text) !important;
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
+  width: 22px;
+  height: 22px;
+  line-height: 22px;
   border-radius: 50%;
-  margin-left: calc(50% - 10px);
+  margin: 0 auto 2px auto;
   font-weight: 800;
 }
 
-/* Etiqueta do Show */
 .day-artist-label {
   font-size: 0.55em;
   color: var(--text-main);
@@ -291,7 +269,6 @@ body {
     transform: translateY(0);
   }
 }
-
 .modal-header {
   padding: 15px 20px;
   background: var(--modal-bg);
@@ -312,7 +289,7 @@ body {
   padding-bottom: 50px;
 }
 
-/* Inputs */
+/* INPUTS E BOTÕES */
 .form-group label {
   color: #888;
   font-size: 0.75em;
@@ -335,8 +312,6 @@ input[type="date"]::-webkit-calendar-picker-indicator,
 input[type="time"]::-webkit-calendar-picker-indicator {
   filter: invert(1);
 }
-
-/* Botões */
 .btn-primary {
   width: 100%;
   padding: 16px;
@@ -349,8 +324,26 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   margin-top: 15px;
   cursor: pointer;
 }
+.fab-add {
+  position: absolute;
+  bottom: 25px;
+  right: 25px;
+  width: 60px;
+  height: 60px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  border: none;
+  font-size: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
 
-/* Cores */
+/* CORES SELEÇÃO */
 .color-presets {
   display: flex;
   gap: 15px;

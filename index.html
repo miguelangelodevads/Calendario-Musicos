@@ -32,7 +32,6 @@
 
       <div class="header">
         <h1>MEUS SHOWS</h1>
-        <p>Agenda Inteligente</p>
       </div>
 
       <div class="main-content">
@@ -45,6 +44,16 @@
             <button onclick="goToToday()">Hoje</button>
             <button onclick="changeMonth(1)">▶</button>
           </div>
+        </div>
+
+        <div class="week-header">
+          <div class="sunday">D</div>
+          <div>S</div>
+          <div>T</div>
+          <div>Q</div>
+          <div>Q</div>
+          <div>S</div>
+          <div>S</div>
         </div>
 
         <div class="calendar" id="calendarGrid"></div>
@@ -64,7 +73,6 @@
         <div class="modal-body">
           <form id="showForm">
             <input type="hidden" id="editingId" />
-
             <div style="display: flex; gap: 10px">
               <div class="form-group" style="flex: 1">
                 <label>DATA</label><input type="date" id="showDate" required />
@@ -73,7 +81,6 @@
                 <label>DATA NF</label><input type="date" id="nfDate" />
               </div>
             </div>
-
             <div class="form-group">
               <label>ARTISTA / BANDA</label
               ><input type="text" id="artistName" required />
@@ -97,7 +104,6 @@
                 <label>FIM</label><input type="time" id="endTime" required />
               </div>
             </div>
-
             <div style="display: flex; gap: 10px">
               <div class="form-group" style="flex: 1">
                 <label>CACHÊ (R$)</label
@@ -107,12 +113,10 @@
                 <label>RECEBIMENTO</label><input type="date" id="paymentDate" />
               </div>
             </div>
-
             <div class="form-group">
               <label>OBSERVAÇÕES</label
               ><textarea id="notes" rows="3"></textarea>
             </div>
-
             <button type="submit" class="btn-primary">SALVAR AGENDA</button>
           </form>
         </div>
@@ -176,7 +180,6 @@
               <span style="font-size: 1.4em">⊞</span>.
             </p>
           </div>
-          <div style="font-size: 2em; animation: bounce 1.5s infinite">⬇</div>
           <button
             class="btn-primary"
             onclick="closeModal('iosInstallModal')"
@@ -191,11 +194,7 @@
     <script src="script.js"></script>
     <script>
       if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker
-            .register("./sw.js")
-            .catch((err) => console.log("Erro SW:", err));
-        });
+        navigator.serviceWorker.register("./sw.js");
       }
     </script>
   </body>

@@ -19,7 +19,7 @@ function init() {
   setupPWA();
 }
 
-/* --- CALENDÁRIO --- */
+/* --- CALENDÁRIO (CORRIGIDO SEM DIAS DA SEMANA) --- */
 function renderCalendar() {
   const grid = document.getElementById("calendarGrid");
   document.getElementById("currentMonthDisplay").innerText =
@@ -29,25 +29,19 @@ function renderCalendar() {
   const year = viewDate.getFullYear();
   const month = viewDate.getMonth();
 
-  ["D", "S", "T", "Q", "Q", "S", "S"].forEach((d) => {
-    const el = document.createElement("div");
-    el.className = "day-header";
-    el.innerText = d;
-    grid.appendChild(el);
-  });
-
+  // Calcula início e fim do mês
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const todayStr = new Date().toISOString().split("T")[0];
 
+  // Espaços vazios do mês anterior
   for (let i = 0; i < firstDay; i++) {
-    grid.appendChild(
-      Object.assign(document.createElement("div"), {
-        className: "day other-month",
-      }),
-    );
+    const el = document.createElement("div");
+    el.className = "day other-month";
+    grid.appendChild(el);
   }
 
+  // Dias Reais
   for (let d = 1; d <= daysInMonth; d++) {
     const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
     const dayShows = shows.filter((s) => s.date === dateStr);
@@ -80,7 +74,6 @@ function openFormModal(date = "") {
   document.getElementById("formTitle").innerText = "NOVO SHOW";
   if (date) document.getElementById("showDate").value = date;
 
-  // Seleciona a primeira cor por padrão (visual)
   const firstColor = PRESET_COLORS[0];
   const firstEl = document.querySelector(
     `.color-option[data-color="${firstColor}"]`,
@@ -118,17 +111,12 @@ function openDetailsModal(dateStr, dayShows) {
   document.getElementById("detailsModal").style.display = "flex";
 }
 
-/* --- FUNÇÃO DUPLICAR --- */
 function duplicateShow(id) {
   const s = shows.find((x) => x.id === id);
   if (!s) return;
-
   closeModal("detailsModal");
-  openFormModal(); // Abre formulário limpo
-
+  openFormModal();
   document.getElementById("formTitle").innerText = "DUPLICAR SHOW";
-
-  // Preenche com dados do show original
   document.getElementById("artistName").value = s.artist;
   document.getElementById("venueName").value = s.venue;
   document.getElementById("startTime").value = s.startTime;
@@ -137,16 +125,11 @@ function duplicateShow(id) {
   document.getElementById("notes").value = s.notes;
   document.getElementById("nfDate").value = s.nfDate;
   document.getElementById("paymentDate").value = s.paymentDate;
-
-  // Mantém a data original selecionada (usuário troca se quiser)
   document.getElementById("showDate").value = s.date;
-
-  // Seleciona a cor visualmente
   const colorEl = document.querySelector(
     `.color-option[data-color="${s.color}"]`,
   );
   selectEventColor(s.color, colorEl);
-
   alert("Dados copiados! Escolha a NOVA DATA e salve.");
 }
 
@@ -225,8 +208,6 @@ function editShow(id) {
   document.getElementById("notes").value = s.notes;
   document.getElementById("nfDate").value = s.nfDate;
   document.getElementById("paymentDate").value = s.paymentDate;
-
-  // Seleção visual da cor
   const colorEl = document.querySelector(
     `.color-option[data-color="${s.color}"]`,
   );
@@ -244,7 +225,6 @@ function deleteShow(id) {
 
 /* --- UTILITÁRIOS --- */
 function renderColorPresets() {
-  // Adicionei data-color para facilitar a busca
   document.getElementById("colorPresets").innerHTML = PRESET_COLORS.map(
     (c) =>
       `<div class="color-option" style="background:${c}" data-color="${c}" onclick="selectEventColor('${c}', this)"></div>`,
@@ -253,16 +233,11 @@ function renderColorPresets() {
 
 function selectEventColor(color, element) {
   document.getElementById("eventColor").value = color;
-  // Remove selected de todos
   document
     .querySelectorAll(".color-option")
     .forEach((el) => el.classList.remove("selected"));
-
-  // Adiciona ao clicado (ou encontrado via JS)
-  if (element) {
-    element.classList.add("selected");
-  } else {
-    // Fallback: Tenta encontrar pelo atributo data-color
+  if (element) element.classList.add("selected");
+  else {
     const found = document.querySelector(
       `.color-option[data-color="${color}"]`,
     );
