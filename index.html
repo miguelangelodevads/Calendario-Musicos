@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Meus Shows - Pro</title>
+
+    <link rel="stylesheet" href="style.css" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#000000" />
+    <link
+      rel="apple-touch-icon"
+      href="https://cdn-icons-png.flaticon.com/512/3119/3119338.png"
+    />
+  </head>
+  <body>
+    <div class="container" id="appContainer">
+      <button
+        class="icon-btn btn-notify"
+        onclick="requestNotificationPermission()"
+      >
+        🔔
+      </button>
+      <button class="icon-btn btn-stats" onclick="openStatsModal()">📊</button>
+
+      <div id="installContainer" class="install-container hidden">
+        <button id="installBtn" class="install-btn">📲 Instalar App</button>
+      </div>
+
+      <div class="header">
+        <h1>MEUS SHOWS</h1>
+        <p>Agenda Inteligente</p>
+      </div>
+
+      <div class="main-content">
+        <div id="dailyAlerts" class="alert-box"></div>
+
+        <div class="calendar-header">
+          <h2 id="currentMonthDisplay"></h2>
+          <div class="month-nav">
+            <button onclick="changeMonth(-1)">◀</button>
+            <button onclick="goToToday()">Hoje</button>
+            <button onclick="changeMonth(1)">▶</button>
+          </div>
+        </div>
+
+        <div class="calendar" id="calendarGrid"></div>
+      </div>
+
+      <button class="fab-add" onclick="openFormModal()">+</button>
+    </div>
+
+    <div id="formModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="formTitle">NOVO SHOW</h2>
+          <span class="close-btn" onclick="closeModal('formModal')"
+            >&times;</span
+          >
+        </div>
+        <div class="modal-body">
+          <form id="showForm">
+            <input type="hidden" id="editingId" />
+
+            <div style="display: flex; gap: 10px">
+              <div class="form-group" style="flex: 1">
+                <label>DATA</label><input type="date" id="showDate" required />
+              </div>
+              <div class="form-group" style="flex: 1">
+                <label>DATA NF</label><input type="date" id="nfDate" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>ARTISTA / BANDA</label
+              ><input type="text" id="artistName" required />
+            </div>
+            <div class="form-group">
+              <label>LOCAL</label><input type="text" id="venueName" required />
+            </div>
+
+            <div class="form-group">
+              <label>COR DE IDENTIFICAÇÃO</label>
+              <div class="color-presets" id="colorPresets"></div>
+              <input type="hidden" id="eventColor" value="#007aff" />
+            </div>
+
+            <div style="display: flex; gap: 10px">
+              <div class="form-group" style="flex: 1">
+                <label>INÍCIO</label
+                ><input type="time" id="startTime" required />
+              </div>
+              <div class="form-group" style="flex: 1">
+                <label>FIM</label><input type="time" id="endTime" required />
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 10px">
+              <div class="form-group" style="flex: 1">
+                <label>CACHÊ (R$)</label
+                ><input type="number" id="showValue" step="0.01" required />
+              </div>
+              <div class="form-group" style="flex: 1">
+                <label>RECEBIMENTO</label><input type="date" id="paymentDate" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>OBSERVAÇÕES</label
+              ><textarea id="notes" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary">SALVAR AGENDA</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="detailsModal" class="modal">
+      <div class="modal-content" style="height: auto; max-height: 85%">
+        <div class="modal-header">
+          <h2 id="detailsDateTitle">DETALHES</h2>
+          <span class="close-btn" onclick="closeModal('detailsModal')"
+            >&times;</span
+          >
+        </div>
+        <div class="modal-body" id="detailsList"></div>
+      </div>
+    </div>
+
+    <div id="statsModal" class="modal">
+      <div class="modal-content" style="height: auto; max-height: 80%">
+        <div class="modal-header">
+          <h2>📊 FINANCEIRO</h2>
+          <span class="close-btn" onclick="closeModal('statsModal')"
+            >&times;</span
+          >
+        </div>
+        <div class="modal-body" id="statsDisplay"></div>
+      </div>
+    </div>
+
+    <div id="iosInstallModal" class="modal">
+      <div
+        class="modal-content"
+        style="height: auto; padding-bottom: 30px; background: #1c1c1e"
+      >
+        <div class="modal-header" style="border-bottom: none">
+          <h2>INSTALAR NO IPHONE</h2>
+          <span class="close-btn" onclick="closeModal('iosInstallModal')"
+            >&times;</span
+          >
+        </div>
+        <div class="modal-body" style="text-align: center; color: white">
+          <p style="margin-bottom: 20px; font-size: 1em; opacity: 0.8">
+            Para instalar, siga os passos:
+          </p>
+          <div
+            style="
+              background: #2c2c2e;
+              padding: 15px;
+              border-radius: 12px;
+              margin-bottom: 15px;
+              text-align: left;
+            "
+          >
+            <p style="margin-bottom: 10px">
+              1. Toque em <strong>Compartilhar</strong>
+              <span style="font-size: 1.4em">⎋</span>.
+            </p>
+            <p>
+              2. Escolha <strong>"Adicionar à Tela de Início"</strong>
+              <span style="font-size: 1.4em">⊞</span>.
+            </p>
+          </div>
+          <div style="font-size: 2em; animation: bounce 1.5s infinite">⬇</div>
+          <button
+            class="btn-primary"
+            onclick="closeModal('iosInstallModal')"
+            style="margin-top: 20px; background: #333"
+          >
+            Entendi
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("./sw.js")
+            .catch((err) => console.log("Erro SW:", err));
+        });
+      }
+    </script>
+  </body>
+</html>
