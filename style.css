@@ -2,8 +2,8 @@
   /* CORES: PRETO ABSOLUTO */
   --bg: #000000;
   --text-main: #ffffff;
-  --text-muted: #666666;
-  --grid-lines: #222222; /* Linha sutil mas visível */
+  --text-muted: #888888;
+  --grid-lines: #111111; /* Linhas muito sutis */
 
   --sunday-color: #e74c3c;
   --today-bg: #ffffff;
@@ -51,30 +51,36 @@ body {
 
 /* HEADER */
 .header {
-  padding: 30px 15px 10px;
+  padding: 25px 25px 10px;
   text-align: center;
+  background: var(--bg);
   flex-shrink: 0;
   z-index: 10;
 }
 .header h1 {
-  font-size: 1.2em;
+  font-size: 1.1em;
   font-weight: 700;
   letter-spacing: 0.5px;
   text-transform: uppercase;
   margin: 0;
 }
 
+/* Ícones Topo (Correção de Clique: Z-Index Alto) */
 .icon-btn {
   position: absolute;
-  top: 30px;
-  width: 35px;
-  height: 35px;
+  top: 10px;
+  width: 40px;
+  height: 40px;
   background: transparent;
   color: var(--primary);
   border: none;
   font-size: 1.3em;
   cursor: pointer;
-  z-index: 20;
+  z-index: 1000 !important; /* Força ficar acima de tudo */
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .btn-notify {
   left: 10px;
@@ -83,25 +89,25 @@ body {
   right: 10px;
 }
 
-/* INSTALAR APP */
+/* Instalar App */
 .install-container {
   position: absolute;
-  top: 70px;
+  top: 50px;
   left: 0;
   right: 0;
   display: flex;
   justify-content: center;
   z-index: 50;
-  animation: slideDown 0.5s;
+  animation: slideDown 0.5s ease-out;
 }
 .install-btn {
   background: var(--primary);
   color: white;
   border: none;
-  padding: 8px 20px;
+  padding: 6px 16px;
   border-radius: 30px;
   font-weight: 700;
-  font-size: 0.9em;
+  font-size: 0.8em;
   cursor: pointer;
   box-shadow: 0 4px 15px rgba(0, 122, 255, 0.4);
   display: flex;
@@ -119,71 +125,92 @@ body {
   }
 }
 
-/* ÁREA CENTRAL */
+/* ÁREA DO CALENDÁRIO */
 .main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  padding: 0;
 }
 
+/* Cabeçalho do Mês (Correção de Z-Index para Setas) */
 .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 5px 15px;
-  min-height: 40px;
+  background: var(--bg);
+  min-height: 45px;
   border-bottom: 1px solid var(--grid-lines);
+  position: relative;
+  z-index: 100; /* Garante que setas funcionem */
 }
 .calendar-header h2 {
-  font-size: 1.2em;
+  font-size: 1.3em;
   font-weight: 800;
   margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.month-nav {
+  display: flex;
+  gap: 5px;
+  position: relative;
+  z-index: 101;
 }
 .month-nav button {
   background: #222;
   color: #fff;
-  border: none;
-  width: 30px;
-  height: 30px;
+  border: 1px solid #333;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   font-weight: bold;
   cursor: pointer;
-}
-
-/* --- GRADE ALINHADA --- */
-.week-header {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  text-align: center;
-  background: var(--bg);
-  height: 25px;
+  display: flex;
   align-items: center;
-  border-bottom: 1px solid var(--grid-lines);
-  flex-shrink: 0;
+  justify-content: center;
 }
-.week-header div {
-  color: var(--text-muted);
-  font-weight: 700;
-  font-size: 0.65em;
-}
-.week-header .sunday {
-  color: var(--sunday-color);
+.month-nav button:active {
+  transform: scale(0.95);
+  background: #444;
 }
 
+/* O CALENDÁRIO (Correção da Grade Quebrada) */
 .calendar {
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  /* ISSO É O QUE CONSERTA O LAYOUT: */
+  grid-template-columns: repeat(7, 1fr);
   grid-auto-rows: 1fr;
+  width: 100%;
   gap: 0;
   background: var(--bg);
   padding-bottom: 0;
 }
 
+/* CABEÇALHO DOS DIAS (D S T...) */
+.day-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--text-muted);
+  font-size: 0.8em;
+  height: 30px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--grid-lines);
+}
+.day-header:first-child {
+  color: var(--sunday-color);
+}
+
+/* CÉLULAS DOS DIAS */
 .day {
   background: var(--bg);
-  padding: 4px 0 0 0; /* Padding mínimo para colar o número */
+  /* Espaço topo grande para o número estilo Samsung */
+  padding: 34px 0 0 0;
   cursor: pointer;
   position: relative;
   display: flex;
@@ -197,14 +224,16 @@ body {
   border-right: none;
 }
 
+/* NÚMERO DO DIA (GRANDE) */
 .day-number {
+  position: absolute;
+  top: 4px;
   width: 100%;
   text-align: center;
-  display: block;
-  font-size: 0.85em;
-  font-weight: 500;
+  font-size: 1.2em; /* Fonte Grande */
+  font-weight: 600;
   color: var(--text-main);
-  margin-bottom: 2px;
+  z-index: 2;
 }
 .calendar .day:nth-child(7n + 1) .day-number {
   color: var(--sunday-color);
@@ -212,26 +241,30 @@ body {
 .day.other-month .day-number {
   opacity: 0.3;
 }
+
+/* Dia de Hoje (Círculo Branco) */
 .day.today .day-number {
   background: var(--today-bg);
   color: var(--today-text) !important;
-  width: 22px;
-  height: 22px;
-  line-height: 22px;
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
   border-radius: 50%;
-  margin: 0 auto 2px auto;
+  margin-left: calc(50% - 16px);
   font-weight: 800;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
+/* Etiqueta do Show */
 .day-artist-label {
-  font-size: 0.55em;
+  font-size: 0.8em;
   color: var(--text-main);
-  padding-left: 3px;
-  margin-top: 1px;
+  padding-left: 4px;
+  margin-top: 8px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  border-left-width: 2px;
+  border-left-width: 3px;
   border-left-style: solid;
   line-height: 1.2;
 }
@@ -245,7 +278,7 @@ body {
   top: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(5px);
   align-items: flex-end;
   justify-content: center;
@@ -269,6 +302,7 @@ body {
     transform: translateY(0);
   }
 }
+
 .modal-header {
   padding: 15px 20px;
   background: var(--modal-bg);
@@ -289,7 +323,7 @@ body {
   padding-bottom: 50px;
 }
 
-/* INPUTS E BOTÕES */
+/* Inputs e Botões */
 .form-group label {
   color: #888;
   font-size: 0.75em;
@@ -312,6 +346,7 @@ input[type="date"]::-webkit-calendar-picker-indicator,
 input[type="time"]::-webkit-calendar-picker-indicator {
   filter: invert(1);
 }
+
 .btn-primary {
   width: 100%;
   padding: 16px;
@@ -324,26 +359,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   margin-top: 15px;
   cursor: pointer;
 }
-.fab-add {
-  position: absolute;
-  bottom: 25px;
-  right: 25px;
-  width: 60px;
-  height: 60px;
-  background: var(--primary);
-  color: white;
-  border-radius: 50%;
-  border: none;
-  font-size: 30px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
 
-/* CORES SELEÇÃO */
 .color-presets {
   display: flex;
   gap: 15px;

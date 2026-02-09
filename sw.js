@@ -1,11 +1,11 @@
-const CACHE_NAME = "meus-shows-dark-v2";
+const CACHE_NAME = "meus-shows-dark-v5";
 const ASSETS = [
   "./",
   "./index.html",
   "./style.css",
   "./script.js",
   "./manifest.json",
-  "https://cdn-icons-png.flaticon.com/512/3119/3119338.png",
+  "https://cdn-icons-png.flaticon.com/512/3238/3238042.png",
 ];
 
 self.addEventListener("install", (e) => {
@@ -14,4 +14,18 @@ self.addEventListener("install", (e) => {
 
 self.addEventListener("fetch", (e) => {
   e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+});
+
+self.addEventListener("activate", (e) => {
+  e.waitUntil(
+    caches.keys().then((keyList) => {
+      return Promise.all(
+        keyList.map((key) => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        }),
+      );
+    }),
+  );
 });

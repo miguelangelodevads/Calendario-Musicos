@@ -19,7 +19,7 @@ function init() {
   setupPWA();
 }
 
-/* --- CALENDÁRIO (CORRIGIDO SEM DIAS DA SEMANA) --- */
+/* --- CALENDÁRIO --- */
 function renderCalendar() {
   const grid = document.getElementById("calendarGrid");
   document.getElementById("currentMonthDisplay").innerText =
@@ -29,19 +29,28 @@ function renderCalendar() {
   const year = viewDate.getFullYear();
   const month = viewDate.getMonth();
 
-  // Calcula início e fim do mês
+  // Cabeçalho dos dias da semana
+  ["D", "S", "T", "Q", "Q", "S", "S"].forEach((d) => {
+    const el = document.createElement("div");
+    el.className = "day-header";
+    el.innerText = d;
+    grid.appendChild(el);
+  });
+
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const todayStr = new Date().toISOString().split("T")[0];
 
-  // Espaços vazios do mês anterior
+  // Dias vazios do mês anterior
   for (let i = 0; i < firstDay; i++) {
-    const el = document.createElement("div");
-    el.className = "day other-month";
-    grid.appendChild(el);
+    grid.appendChild(
+      Object.assign(document.createElement("div"), {
+        className: "day other-month",
+      }),
+    );
   }
 
-  // Dias Reais
+  // Dias do mês atual
   for (let d = 1; d <= daysInMonth; d++) {
     const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
     const dayShows = shows.filter((s) => s.date === dateStr);
@@ -67,19 +76,17 @@ function renderCalendar() {
   }
 }
 
-/* --- MODAIS E AÇÕES --- */
+/* --- MODAIS --- */
 function openFormModal(date = "") {
   document.getElementById("showForm").reset();
   document.getElementById("editingId").value = "";
   document.getElementById("formTitle").innerText = "NOVO SHOW";
   if (date) document.getElementById("showDate").value = date;
-
   const firstColor = PRESET_COLORS[0];
   const firstEl = document.querySelector(
     `.color-option[data-color="${firstColor}"]`,
   );
   selectEventColor(firstColor, firstEl);
-
   document.getElementById("formModal").style.display = "flex";
 }
 
@@ -142,13 +149,11 @@ function openStatsModal() {
   const cm = viewDate.getMonth(),
     cy = viewDate.getFullYear();
   const monthName = viewDate.toLocaleDateString("pt-BR", { month: "long" });
-
   const mShows = shows.filter((s) => {
     const d = new Date(s.date + "T00:00:00");
     return d.getMonth() === cm && d.getFullYear() === cy;
   });
   const mTotal = mShows.reduce((a, b) => a + b.value, 0);
-
   const yShows = shows.filter((s) => new Date(s.date).getFullYear() === cy);
   const yTotal = yShows.reduce((a, b) => a + b.value, 0);
 
@@ -223,7 +228,6 @@ function deleteShow(id) {
   }
 }
 
-/* --- UTILITÁRIOS --- */
 function renderColorPresets() {
   document.getElementById("colorPresets").innerHTML = PRESET_COLORS.map(
     (c) =>
@@ -236,8 +240,9 @@ function selectEventColor(color, element) {
   document
     .querySelectorAll(".color-option")
     .forEach((el) => el.classList.remove("selected"));
-  if (element) element.classList.add("selected");
-  else {
+  if (element) {
+    element.classList.add("selected");
+  } else {
     const found = document.querySelector(
       `.color-option[data-color="${color}"]`,
     );
@@ -267,13 +272,11 @@ function requestNotificationPermission() {
   Notification.requestPermission();
 }
 
-/* --- PWA --- */
 function setupPWA() {
   let deferredPrompt;
   const installContainer = document.getElementById("installContainer");
   const installBtn = document.getElementById("installBtn");
   const iosModal = document.getElementById("iosInstallModal");
-
   const isStandalone =
     window.matchMedia("(display-mode: standalone)").matches ||
     window.navigator.standalone;
@@ -281,7 +284,6 @@ function setupPWA() {
     installContainer.style.display = "none";
     return;
   }
-
   const isIos =
     /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
   if (isIos) {
@@ -290,13 +292,11 @@ function setupPWA() {
       iosModal.style.display = "flex";
     });
   }
-
   window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
     deferredPrompt = e;
     installContainer.classList.remove("hidden");
   });
-
   installBtn.addEventListener("click", async () => {
     if (deferredPrompt) {
       deferredPrompt.prompt();
@@ -307,7 +307,6 @@ function setupPWA() {
       }
     }
   });
-
   window.addEventListener("appinstalled", () => {
     installContainer.classList.add("hidden");
     deferredPrompt = null;
