@@ -29,13 +29,7 @@ function renderCalendar() {
   const year = viewDate.getFullYear();
   const month = viewDate.getMonth();
 
-  // Cabeçalho dos dias da semana
-  ["D", "S", "T", "Q", "Q", "S", "S"].forEach((d) => {
-    const el = document.createElement("div");
-    el.className = "day-header";
-    el.innerText = d;
-    grid.appendChild(el);
-  });
+  // (REMOVIDO: GERAÇÃO DE D S T Q Q S S - AGORA É FIXO NO HTML)
 
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();

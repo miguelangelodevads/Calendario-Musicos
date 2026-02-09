@@ -1,9 +1,9 @@
 :root {
-  /* CORES: PRETO ABSOLUTO */
+  /* CORES */
   --bg: #000000;
   --text-main: #ffffff;
   --text-muted: #888888;
-  --grid-lines: #111111; /* Linhas muito sutis */
+  --grid-lines: #111111;
 
   --sunday-color: #e74c3c;
   --today-bg: #ffffff;
@@ -51,7 +51,7 @@ body {
 
 /* HEADER */
 .header {
-  padding: 25px 25px 10px;
+  padding: 15px 15px 5px;
   text-align: center;
   background: var(--bg);
   flex-shrink: 0;
@@ -65,7 +65,7 @@ body {
   margin: 0;
 }
 
-/* Ícones Topo (Correção de Clique: Z-Index Alto) */
+/* Ícones Topo */
 .icon-btn {
   position: absolute;
   top: 10px;
@@ -76,7 +76,7 @@ body {
   border: none;
   font-size: 1.3em;
   cursor: pointer;
-  z-index: 1000 !important; /* Força ficar acima de tudo */
+  z-index: 1000 !important;
   pointer-events: auto;
   display: flex;
   align-items: center;
@@ -134,7 +134,7 @@ body {
   padding: 0;
 }
 
-/* Cabeçalho do Mês (Correção de Z-Index para Setas) */
+/* Cabeçalho do Mês */
 .calendar-header {
   display: flex;
   justify-content: space-between;
@@ -142,9 +142,9 @@ body {
   padding: 5px 15px;
   background: var(--bg);
   min-height: 45px;
-  border-bottom: 1px solid var(--grid-lines);
+  /* Sem borda embaixo, agora quem tem borda é o week-header */
   position: relative;
-  z-index: 100; /* Garante que setas funcionem */
+  z-index: 100;
 }
 .calendar-header h2 {
   font-size: 1.3em;
@@ -177,40 +177,52 @@ body {
   background: #444;
 }
 
-/* O CALENDÁRIO (Correção da Grade Quebrada) */
+/* --- NOVO: CABEÇALHO DOS DIAS (FORA DO GRID) --- */
+.week-header {
+  display: grid;
+  grid-template-columns: repeat(
+    7,
+    1fr
+  ); /* Alinha perfeitamente com o calendário */
+  width: 100%;
+  background: var(--bg);
+  border-bottom: 1px solid var(--grid-lines);
+  padding-bottom: 5px;
+  z-index: 10;
+}
+
+.week-header span {
+  text-align: center;
+  font-weight: 700;
+  color: var(--text-muted);
+  font-size: 0.85em; /* Fonte legível */
+  height: 25px;
+  line-height: 25px;
+}
+.week-header span:first-child {
+  color: var(--sunday-color);
+}
+
+/* O CALENDÁRIO (SÓ DIAS) */
 .calendar {
   flex: 1;
   display: grid;
-  /* ISSO É O QUE CONSERTA O LAYOUT: */
   grid-template-columns: repeat(7, 1fr);
   grid-auto-rows: 1fr;
   width: 100%;
   gap: 0;
   background: var(--bg);
   padding-bottom: 0;
-}
-
-/* CABEÇALHO DOS DIAS (D S T...) */
-.day-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  color: var(--text-muted);
-  font-size: 0.8em;
-  height: 30px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--grid-lines);
-}
-.day-header:first-child {
-  color: var(--sunday-color);
+  border-top: none; /* Borda já está no week-header */
 }
 
 /* CÉLULAS DOS DIAS */
 .day {
   background: var(--bg);
-  /* Espaço topo grande para o número estilo Samsung */
-  padding: 34px 0 0 0;
+
+  /* PADDING REDUZIDO: Números colados no teto */
+  padding: 26px 0 0 0;
+
   cursor: pointer;
   position: relative;
   display: flex;
@@ -224,13 +236,15 @@ body {
   border-right: none;
 }
 
-/* NÚMERO DO DIA (GRANDE) */
+/* NÚMERO DO DIA */
 .day-number {
   position: absolute;
-  top: 4px;
+  /* COLADO NO TOPO */
+  top: 2px;
+
   width: 100%;
   text-align: center;
-  font-size: 1.2em; /* Fonte Grande */
+  font-size: 1.3em;
   font-weight: 600;
   color: var(--text-main);
   z-index: 2;
@@ -242,7 +256,7 @@ body {
   opacity: 0.3;
 }
 
-/* Dia de Hoje (Círculo Branco) */
+/* Dia de Hoje */
 .day.today .day-number {
   background: var(--today-bg);
   color: var(--today-text) !important;
@@ -260,7 +274,7 @@ body {
   font-size: 0.8em;
   color: var(--text-main);
   padding-left: 4px;
-  margin-top: 8px;
+  margin-top: 15px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

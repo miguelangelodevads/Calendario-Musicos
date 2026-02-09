@@ -12,15 +12,8 @@
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#000000" />
 
-    <link
-      rel="apple-touch-icon"
-      href="https://cdn-icons-png.flaticon.com/512/3238/3238042.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      href="https://cdn-icons-png.flaticon.com/512/3238/3238042.png"
-    />
+    <link rel="apple-touch-icon" href="icone.png" />
+    <link rel="icon" type="image/png" href="icone.png" />
   </head>
   <body>
     <div class="container" id="appContainer">
@@ -50,6 +43,11 @@
             <button onclick="goToToday()">Hoje</button>
             <button onclick="changeMonth(1)">▶</button>
           </div>
+        </div>
+
+        <div class="week-header">
+          <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span
+          ><span>S</span><span>S</span>
         </div>
 
         <div class="calendar" id="calendarGrid"></div>
