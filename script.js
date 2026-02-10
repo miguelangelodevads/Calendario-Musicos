@@ -19,6 +19,14 @@ function init() {
   setupPWA();
 }
 
+/* --- FUNÇÃO CORRETORA DE DATA (NOVO) --- */
+// Essa função impede que o fuso horário mude o dia
+function getLocalDateString() {
+  const d = new Date();
+  const offset = d.getTimezoneOffset() * 60000;
+  return new Date(d.getTime() - offset).toISOString().split("T")[0];
+}
+
 /* --- CALENDÁRIO --- */
 function renderCalendar() {
   const grid = document.getElementById("calendarGrid");
@@ -29,11 +37,11 @@ function renderCalendar() {
   const year = viewDate.getFullYear();
   const month = viewDate.getMonth();
 
-  // (REMOVIDO: GERAÇÃO DE D S T Q Q S S - AGORA É FIXO NO HTML)
-
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const todayStr = new Date().toISOString().split("T")[0];
+
+  // AQUI ESTÁ A CORREÇÃO DO "HOJE"
+  const todayStr = getLocalDateString();
 
   // Dias vazios do mês anterior
   for (let i = 0; i < firstDay; i++) {
@@ -46,11 +54,19 @@ function renderCalendar() {
 
   // Dias do mês atual
   for (let d = 1; d <= daysInMonth; d++) {
-    const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+    // Correção também para montar a data do dia sem erros de fuso
+    const dateObj = new Date(year, month, d);
+    const offset = dateObj.getTimezoneOffset() * 60000;
+    const dateStr = new Date(dateObj.getTime() - offset)
+      .toISOString()
+      .split("T")[0];
+
     const dayShows = shows.filter((s) => s.date === dateStr);
 
     const el = document.createElement("div");
     el.className = "day";
+
+    // Se a string bater, marca como hoje
     if (todayStr === dateStr) el.classList.add("today");
 
     const labelsHtml = dayShows
@@ -86,9 +102,10 @@ function openFormModal(date = "") {
 
 function openDetailsModal(dateStr, dayShows) {
   const list = document.getElementById("detailsList");
-  document.getElementById("detailsDateTitle").innerText = new Date(
-    dateStr + "T00:00:00",
-  ).toLocaleDateString("pt-BR", { day: "2-digit", month: "long" });
+  // Ajuste para exibir a data correta no título do modal
+  const dateObj = new Date(dateStr + "T00:00:00");
+  document.getElementById("detailsDateTitle").innerText =
+    dateObj.toLocaleDateString("pt-BR", { day: "2-digit", month: "long" });
 
   list.innerHTML =
     dayShows
@@ -245,15 +262,15 @@ function selectEventColor(color, element) {
 }
 
 function checkAndNotify() {
-  const c = shows.filter(
-    (s) => s.date === new Date().toISOString().split("T")[0],
-  ).length;
+  const todayStr = getLocalDateString();
+  const c = shows.filter((s) => s.date === todayStr).length;
   if (c > 0) {
     const a = document.getElementById("dailyAlerts");
     a.innerText = `🔔 ${c} show(s) hoje!`;
     a.style.display = "block";
   }
 }
+
 function changeMonth(d) {
   viewDate.setMonth(viewDate.getMonth() + d);
   renderCalendar();
