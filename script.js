@@ -19,8 +19,7 @@ function init() {
   setupPWA();
 }
 
-/* --- FUNÇÃO CORRETORA DE DATA (NOVO) --- */
-// Essa função impede que o fuso horário mude o dia
+/* --- FUNÇÃO CORRETORA DE DATA --- */
 function getLocalDateString() {
   const d = new Date();
   const offset = d.getTimezoneOffset() * 60000;
@@ -39,11 +38,8 @@ function renderCalendar() {
 
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-  // AQUI ESTÁ A CORREÇÃO DO "HOJE"
   const todayStr = getLocalDateString();
 
-  // Dias vazios do mês anterior
   for (let i = 0; i < firstDay; i++) {
     grid.appendChild(
       Object.assign(document.createElement("div"), {
@@ -52,9 +48,7 @@ function renderCalendar() {
     );
   }
 
-  // Dias do mês atual
   for (let d = 1; d <= daysInMonth; d++) {
-    // Correção também para montar a data do dia sem erros de fuso
     const dateObj = new Date(year, month, d);
     const offset = dateObj.getTimezoneOffset() * 60000;
     const dateStr = new Date(dateObj.getTime() - offset)
@@ -65,8 +59,6 @@ function renderCalendar() {
 
     const el = document.createElement("div");
     el.className = "day";
-
-    // Se a string bater, marca como hoje
     if (todayStr === dateStr) el.classList.add("today");
 
     const labelsHtml = dayShows
@@ -102,7 +94,6 @@ function openFormModal(date = "") {
 
 function openDetailsModal(dateStr, dayShows) {
   const list = document.getElementById("detailsList");
-  // Ajuste para exibir a data correta no título do modal
   const dateObj = new Date(dateStr + "T00:00:00");
   document.getElementById("detailsDateTitle").innerText =
     dateObj.toLocaleDateString("pt-BR", { day: "2-digit", month: "long" });
@@ -112,13 +103,20 @@ function openDetailsModal(dateStr, dayShows) {
       .map(
         (s) => `
         <div style="background:#2c2c2e; border-left:5px solid ${s.color}; padding:15px; border-radius:12px; margin-bottom:15px;">
-            <h3 style="color:#fff">${s.artist}</h3>
-            <p style="color:#aaa">📍 ${s.venue} | ⏰ ${s.startTime}</p>
-            <p style="color:#34c759; font-weight:bold; font-size:1.1em">R$ ${s.value}</p>
-            <div style="display:flex; gap:10px; margin-top:10px">
-                <button class="btn-primary" style="padding:10px; margin:0; background:#444" onclick="editShow(${s.id})">✏️ Editar</button>
-                <button class="btn-primary" style="padding:10px; margin:0; background:#5856d6" onclick="duplicateShow(${s.id})">📑 Duplicar</button>
-                <button class="btn-primary" style="padding:10px; margin:0; background:var(--danger)" onclick="deleteShow(${s.id})">🗑️ Excluir</button>
+            <h3 style="color:#fff; margin-bottom:5px;">${s.artist}</h3>
+            <p style="color:#aaa; font-size:0.9em; margin-bottom:5px;">📍 ${s.venue}</p>
+            <p style="color:#aaa; font-size:0.9em; margin-bottom:10px;">⏰ ${s.startTime} - ${s.endTime}</p>
+            <p style="color:#34c759; font-weight:bold; font-size:1.1em; margin-bottom:15px;">R$ ${s.value}</p>
+            
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <a href="https://waze.com/ul?q=${encodeURIComponent(s.venue)}&navigate=yes" target="_blank" class="btn-primary" 
+                   style="padding:10px; margin:0; background:#33ccff; color:#000; text-decoration:none; display:flex; align-items:center; justify-content:center; flex:1; font-size:0.9em;">
+                   🚗 Waze
+                </a>
+                
+                <button class="btn-primary" style="padding:10px; margin:0; background:#444; flex:1; font-size:0.9em;" onclick="editShow(${s.id})">✏️ Editar</button>
+                <button class="btn-primary" style="padding:10px; margin:0; background:#5856d6; flex:1; font-size:0.9em;" onclick="duplicateShow(${s.id})">📑 Copiar</button>
+                <button class="btn-primary" style="padding:10px; margin:0; background:var(--danger); flex:1; font-size:0.9em;" onclick="deleteShow(${s.id})">🗑️</button>
             </div>
         </div>
     `,

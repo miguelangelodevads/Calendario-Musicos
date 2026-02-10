@@ -1,14 +1,13 @@
-const CACHE_NAME = "meus-shows-dark-v7"; // Mudei para v7
+const CACHE_NAME = "meus-shows-dark-v8"; // Mudei para v8 para aparecer o Waze
 const ASSETS = [
   "./",
   "./index.html",
   "./style.css",
   "./script.js",
   "./manifest.json",
-  "./icon.png", // Certifique-se que o arquivo existe com esse nome!
+  "./icon.png", // Se estiver usando ícone online, troque pelo link https://...
 ];
 
-/* ... mantenha o resto do código igual ... */
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)));
 });
@@ -19,12 +18,14 @@ self.addEventListener("fetch", (e) => {
 
 self.addEventListener("activate", (e) => {
   e.waitUntil(
-    caches.keys().then((keyList) =>
-      Promise.all(
+    caches.keys().then((keyList) => {
+      return Promise.all(
         keyList.map((key) => {
-          if (key !== CACHE_NAME) return caches.delete(key);
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
         }),
-      ),
-    ),
+      );
+    }),
   );
 });
