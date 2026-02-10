@@ -142,7 +142,6 @@ body {
   padding: 5px 15px;
   background: var(--bg);
   min-height: 45px;
-  /* Sem borda embaixo, agora quem tem borda é o week-header */
   position: relative;
   z-index: 100;
 }
@@ -177,13 +176,10 @@ body {
   background: #444;
 }
 
-/* --- NOVO: CABEÇALHO DOS DIAS (FORA DO GRID) --- */
+/* CABEÇALHO DOS DIAS (FORA DO GRID) */
 .week-header {
   display: grid;
-  grid-template-columns: repeat(
-    7,
-    1fr
-  ); /* Alinha perfeitamente com o calendário */
+  grid-template-columns: repeat(7, 1fr);
   width: 100%;
   background: var(--bg);
   border-bottom: 1px solid var(--grid-lines);
@@ -195,7 +191,7 @@ body {
   text-align: center;
   font-weight: 700;
   color: var(--text-muted);
-  font-size: 0.85em; /* Fonte legível */
+  font-size: 0.85em;
   height: 25px;
   line-height: 25px;
 }
@@ -208,27 +204,31 @@ body {
   flex: 1;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-auto-rows: 1fr;
+
+  /* AQUI ESTÁ A CORREÇÃO: minmax(0, 1fr) */
+  /* Isso força todas as linhas a terem o mesmo tamanho, ignorando conteúdo extra */
+  grid-auto-rows: minmax(0, 1fr);
+
   width: 100%;
   gap: 0;
   background: var(--bg);
   padding-bottom: 0;
-  border-top: none; /* Borda já está no week-header */
+  border-top: none;
 }
 
 /* CÉLULAS DOS DIAS */
 .day {
   background: var(--bg);
-
-  /* PADDING REDUZIDO: Números colados no teto */
   padding: 26px 0 0 0;
-
   cursor: pointer;
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 1px;
+
+  /* Garante que o que não couber será cortado e não empurrará a borda */
   overflow: hidden;
+
   border-right: 1px solid var(--grid-lines);
   border-bottom: 1px solid var(--grid-lines);
 }
@@ -239,9 +239,7 @@ body {
 /* NÚMERO DO DIA */
 .day-number {
   position: absolute;
-  /* COLADO NO TOPO */
   top: 2px;
-
   width: 100%;
   text-align: center;
   font-size: 1.3em;
@@ -271,10 +269,10 @@ body {
 
 /* Etiqueta do Show */
 .day-artist-label {
-  font-size: 0.8em;
+  font-size: 0.6em;
   color: var(--text-main);
   padding-left: 4px;
-  margin-top: 15px;
+  margin-top: 2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
