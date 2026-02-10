@@ -97,7 +97,10 @@ body {
   right: 0;
   display: flex;
   justify-content: center;
-  z-index: 50;
+
+  /* MUDANÇA AQUI: Aumentei para 2000 para ficar na frente de tudo */
+  z-index: 2000;
+
   animation: slideDown 0.5s ease-out;
 }
 .install-btn {
